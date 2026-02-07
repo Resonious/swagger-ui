@@ -76,9 +76,10 @@ export default class OperationSummary extends PureComponent {
           <div className="opblock-summary-path-description-wrapper">
             <OperationSummaryPath getComponent={getComponent} operationProps={operationProps} specPath={specPath} />
 
+            {/* Show path as secondary info instead of summary */}
             {!showSummary ? null :
               <div className="opblock-summary-description">
-                {toString(resolvedSummary || summary)}
+                {path}
               </div>
             }
           </div>
