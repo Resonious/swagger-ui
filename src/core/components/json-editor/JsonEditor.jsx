@@ -3,7 +3,6 @@
  */
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import "./json-editor.scss"
 
 class JsonNode extends Component {
   static propTypes = {
