@@ -88,6 +88,12 @@ export default class ParamBody extends PureComponent {
     this.onChange(inputValue, {isXml, isEditBox: this.state.isEditBox})
   }
 
+  handleJsonEditorChange = (value) => {
+    const {consumesValue} = this.props
+    const isXml = /xml/i.test(consumesValue)
+    this.onChange(value, {isXml, isEditBox: this.state.isEditBox})
+  }
+
   toggleIsEditBox = () => this.setState( state => ({isEditBox: !state.isEditBox}))
 
   render() {
@@ -101,7 +107,7 @@ export default class ParamBody extends PureComponent {
     } = this.props
 
     const Button = getComponent("Button")
-    const TextArea = getComponent("TextArea")
+    const JsonEditor = getComponent("JsonEditor")
     const HighlightCode = getComponent("HighlightCode", true)
     const ContentType = getComponent("contentType")
     // for domains where specSelectors not passed
@@ -122,9 +128,14 @@ export default class ParamBody extends PureComponent {
 
     return (
       <div className="body-param" data-param-name={param.get("name")} data-param-in={param.get("in")}>
+        {errors.count() > 0 && (
+          <div className="body-param__errors" style={{ color: "red", marginBottom: "10px" }}>
+            {errors.join(", ")}
+          </div>
+        )}
         {
           isEditBox && isExecute
-            ? <TextArea className={ "body-param__text" + ( errors.count() ? " invalid" : "")} value={value} onChange={ this.handleOnChange }/>
+            ? <JsonEditor value={value} onChange={this.handleJsonEditorChange} />
             : (value && <HighlightCode className="body-param__example" language={ language }>{value}</HighlightCode>)
         }
         <div className="body-param-options">

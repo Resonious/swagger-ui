@@ -60,6 +60,7 @@ import DeepLink from "core/components/deep-link"
 import SvgAssets from "core/components/svg-assets"
 import Markdown from "core/components/providers/markdown"
 import BaseLayout from "core/components/layouts/base"
+import JsonEditor from "core/components/json-editor/JsonEditor"
 
 const CoreComponentsPlugin = () => ({
   components: {
@@ -124,6 +125,7 @@ const CoreComponentsPlugin = () => ({
     Example,
     ExamplesSelect,
     ExamplesSelectValueRetainer,
+    JsonEditor,
   },
 })
 

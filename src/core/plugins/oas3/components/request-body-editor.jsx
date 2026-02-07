@@ -48,6 +48,13 @@ export default class RequestBodyEditor extends PureComponent {
     this.props.onChange(stringify(value))
   }
 
+  onJsonEditorChange = (value) => {
+    // JsonEditor already provides a stringified value
+    this.setState({
+      value: value,
+    }, () => this.props.onChange(value))
+  }
+
   onDomChange = e => {
     const inputValue = e.target.value
 
@@ -82,15 +89,18 @@ export default class RequestBodyEditor extends PureComponent {
     } = this.state
 
     let isInvalid = errors.size > 0 ? true : false
-    const TextArea = getComponent("TextArea")
+    const JsonEditor = getComponent("JsonEditor")
 
     return (
       <div className="body-param">
-        <TextArea
-          className={cx("body-param__text", { invalid: isInvalid } )}
-          title={errors.size ? errors.join(", ") : ""}
+        {isInvalid && errors.size > 0 && (
+          <div className="body-param__errors" style={{ color: "red", marginBottom: "10px" }}>
+            {errors.join(", ")}
+          </div>
+        )}
+        <JsonEditor
           value={value}
-          onChange={ this.onDomChange }
+          onChange={this.onJsonEditorChange}
         />
       </div>
     )
