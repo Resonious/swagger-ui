@@ -27,7 +27,10 @@ export default class ParameterRow extends Component {
   constructor(props, context) {
     super(props, context)
 
-    this.setDefaultValue()
+    // Only populate examples when "Try it out" is enabled
+    if (props.isExecute) {
+      this.setDefaultValue()
+    }
   }
 
   UNSAFE_componentWillReceiveProps(props) {
@@ -59,8 +62,12 @@ export default class ParameterRow extends Component {
     if ( value !== undefined && value !== paramValue ) {
       this.onChangeWrapper(numberToString(value))
     }
-    // todo: could check if schema here; if not, do not call. impact?
-    this.setDefaultValue()
+
+    // Only populate examples when "Try it out" is enabled
+    // Also check if we're transitioning from not-execute to execute mode
+    if (props.isExecute && !this.props.isExecute) {
+      this.setDefaultValue()
+    }
   }
 
   onChangeWrapper = (value, isXml = false) => {

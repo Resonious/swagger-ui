@@ -24,13 +24,14 @@ export default class RequestBodyEditor extends PureComponent {
     super(props, context)
 
     this.state = {
-      value: stringify(props.value) || props.defaultValue
+      value: stringify(props.value) || ""
     }
 
-    // this is the glue that makes sure our initial value gets set as the
-    // current request body value
-    // TODO: achieve this in a selector instead
-    props.onChange(props.value)
+    // Don't auto-populate with example values
+    // Only set if there's an actual value (not defaultValue)
+    if (props.value !== undefined && props.value !== null && props.value !== "") {
+      props.onChange(props.value)
+    }
   }
 
   applyDefaultValue = (nextProps) => {
@@ -66,13 +67,8 @@ export default class RequestBodyEditor extends PureComponent {
       })
     }
 
-
-
-    if(!nextProps.value && nextProps.defaultValue && !!this.state.value) {
-      // if new value is falsy, we have a default, AND the falsy value didn't
-      // come from us originally
-      this.applyDefaultValue(nextProps)
-    }
+    // Removed auto-application of defaultValue
+    // Examples should not auto-populate into input fields
   }
 
   render() {
