@@ -24,14 +24,10 @@ export default class RequestBodyEditor extends PureComponent {
     super(props, context)
 
     this.state = {
-      value: stringify(props.value) || ""
+      value: stringify(props.value) || props.defaultValue
     }
 
-    // Don't auto-populate with example values
-    // Only set if there's an actual value (not defaultValue)
-    if (props.value !== undefined && props.value !== null && props.value !== "") {
-      props.onChange(props.value)
-    }
+    this.applyDefaultValue()
   }
 
   applyDefaultValue = (nextProps) => {
@@ -74,8 +70,11 @@ export default class RequestBodyEditor extends PureComponent {
       })
     }
 
-    // Removed auto-application of defaultValue
-    // Examples should not auto-populate into input fields
+    if(
+      this.props.defaultValue !== nextProps.defaultValue
+    ) {
+      this.applyDefaultValue(nextProps)
+    }
   }
 
   render() {
