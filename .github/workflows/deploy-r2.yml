@@ -1,0 +1,52 @@
+name: Deploy to Cloudflare R2
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Configure AWS CLI for R2
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          aws-region: auto
+
+      - name: Upload to R2
+        env:
+          R2_ENDPOINT: https://49be1a37d24df3d621647c105ea79bb0.r2.cloudflarestorage.com
+          R2_BUCKET: swagger-ui
+        run: |
+          aws s3 sync dist/ s3://$R2_BUCKET/ \
+            --endpoint-url $R2_ENDPOINT \
+            --delete \
+            --cache-control "public, max-age=31536000" \
+            --exclude "*.html" \
+            --exclude "oauth2-redirect.html"
+
+          # Upload HTML files with shorter cache for updates
+          aws s3 sync dist/ s3://$R2_BUCKET/ \
+            --endpoint-url $R2_ENDPOINT \
+            --include "*.html" \
+            --cache-control "public, max-age=3600"
