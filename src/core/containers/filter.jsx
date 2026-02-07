@@ -16,29 +16,7 @@ export default class FilterContainer extends React.Component {
   }
 
   render () {
-    const {specSelectors, layoutSelectors, getComponent} = this.props
-    const Col = getComponent("Col")
-
-    const isLoading = specSelectors.loadingStatus() === "loading"
-    const isFailed = specSelectors.loadingStatus() === "failed"
-    const filter = layoutSelectors.currentFilter()
-
-    const classNames = ["operation-filter-input"]
-    if (isFailed) classNames.push("failed")
-    if (isLoading) classNames.push("loading")
-
-    return (
-      <div>
-        {filter === false ? null :
-          <div className="filter-container">
-            <Col className="filter wrapper" mobile={12}>
-              <input className={classNames.join(" ")} placeholder="Filter by tag" type="text"
-                     onChange={this.onFilterChange} value={typeof filter === "string" ? filter : ""}
-                     disabled={isLoading}/>
-            </Col>
-          </div>
-        }
-      </div>
-    )
+    // Filter is now in the TopBar, so this component returns nothing
+    return null
   }
 }

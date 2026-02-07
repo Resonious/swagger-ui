@@ -55,6 +55,23 @@
       outline: none;
     }
 
+    .search-input {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      padding: 8px 12px;
+
+      border: 2px solid $topbar-download-url-wrapper-element-border-color;
+      border-radius: 4px;
+      outline: none;
+
+      font-size: 14px;
+
+      &:focus {
+        border-color: #3b4151;
+      }
+    }
+
     .select-label {
       display: flex;
       align-items: center;

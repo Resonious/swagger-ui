@@ -12,16 +12,35 @@ class TopBar extends React.Component {
 
   constructor(props, context) {
     super(props, context)
-    this.state = { url: props.specSelectors.url(), selectedIndex: 0 }
+    this.state = {
+      url: props.specSelectors.url(),
+      selectedIndex: 0,
+      specLoaded: false
+    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({ url: nextProps.specSelectors.url() })
+
+    // Check if spec has been loaded
+    const isLoaded = nextProps.specSelectors.loadingStatus() === "success"
+    if (isLoaded && !this.state.specLoaded) {
+      this.setState({ specLoaded: true })
+    }
   }
 
   onUrlChange =(e)=> {
     let {target: {value}} = e
     this.setState({url: value})
+  }
+
+  onSearchChange =(e)=> {
+    let {target: {value}} = e
+    this.props.layoutActions.updateFilter(value)
+  }
+
+  preventFormSubmit = (e) => {
+    e.preventDefault()
   }
 
   flushAuthData() {
@@ -109,7 +128,7 @@ class TopBar extends React.Component {
   }
 
   render() {
-    let { getComponent, specSelectors, getConfigs } = this.props
+    let { getComponent, specSelectors, getConfigs, layoutSelectors } = this.props
     const Button = getComponent("Button")
     const Link = getComponent("Link")
     const Logo = getComponent("Logo")
@@ -117,6 +136,7 @@ class TopBar extends React.Component {
 
     let isLoading = specSelectors.loadingStatus() === "loading"
     let isFailed = specSelectors.loadingStatus() === "failed"
+    let isSuccess = specSelectors.loadingStatus() === "success"
 
     const classNames = ["download-url-input"]
     if (isFailed) classNames.push("failed")
@@ -125,6 +145,9 @@ class TopBar extends React.Component {
     const { urls } = getConfigs()
     let control = []
     let formOnSubmit = null
+
+    // Show search input if spec is loaded, otherwise show URL input
+    const showSearch = isSuccess && this.state.specLoaded
 
     if(urls) {
       let rows = []
@@ -140,7 +163,23 @@ class TopBar extends React.Component {
         </label>
       )
     }
+    else if (showSearch) {
+      // Show search input when spec is loaded
+      formOnSubmit = this.preventFormSubmit
+      const filter = layoutSelectors.currentFilter()
+      control.push(
+        <input
+          className="search-input"
+          type="text"
+          onChange={this.onSearchChange}
+          value={typeof filter === "string" ? filter : ""}
+          placeholder="Search operations and models..."
+          id="search-input"
+        />
+      )
+    }
     else {
+      // Show URL input for loading specs
       formOnSubmit = this.downloadUrl
       control.push(
         <input
@@ -176,6 +215,9 @@ class TopBar extends React.Component {
 TopBar.propTypes = {
   specSelectors: PropTypes.object.isRequired,
   specActions: PropTypes.object.isRequired,
+  layoutSelectors: PropTypes.object.isRequired,
+  layoutActions: PropTypes.object.isRequired,
+  authActions: PropTypes.object.isRequired,
   getComponent: PropTypes.func.isRequired,
   getConfigs: PropTypes.func.isRequired
 }
