@@ -26,11 +26,6 @@ export default class ParameterRow extends Component {
 
   constructor(props, context) {
     super(props, context)
-
-    // Show examples in preview mode
-    if (!props.isExecute) {
-      this.setDefaultValue()
-    }
   }
 
   UNSAFE_componentWillReceiveProps(props) {
@@ -61,16 +56,6 @@ export default class ParameterRow extends Component {
 
     if ( value !== undefined && value !== paramValue ) {
       this.onChangeWrapper(numberToString(value))
-    }
-
-    // Clear parameter values when entering "Try it out" mode
-    if (props.isExecute && !this.props.isExecute) {
-      this.onChangeWrapper(null)
-    }
-
-    // Restore examples when leaving "Try it out" mode
-    if (!props.isExecute && this.props.isExecute) {
-      this.setDefaultValue()
     }
   }
 
