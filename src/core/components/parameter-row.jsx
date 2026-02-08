@@ -27,8 +27,8 @@ export default class ParameterRow extends Component {
   constructor(props, context) {
     super(props, context)
 
-    // Only populate examples when "Try it out" is enabled
-    if (props.isExecute) {
+    // Show examples in preview mode
+    if (!props.isExecute) {
       this.setDefaultValue()
     }
   }
@@ -63,9 +63,13 @@ export default class ParameterRow extends Component {
       this.onChangeWrapper(numberToString(value))
     }
 
-    // Only populate examples when "Try it out" is enabled
-    // Also check if we're transitioning from not-execute to execute mode
+    // Clear parameter values when entering "Try it out" mode
     if (props.isExecute && !this.props.isExecute) {
+      this.onChangeWrapper(null)
+    }
+
+    // Restore examples when leaving "Try it out" mode
+    if (!props.isExecute && this.props.isExecute) {
       this.setDefaultValue()
     }
   }
