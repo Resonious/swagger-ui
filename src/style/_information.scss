@@ -57,8 +57,14 @@
     font-weight: 300 !important;
 
     margin: 0;
+    word-break: break-all;
+    white-space: pre-wrap;
 
     @include type.text_code();
+  }
+
+  .url {
+    word-break: break-all;
   }
 
   .title {
