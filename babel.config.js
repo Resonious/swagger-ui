@@ -136,5 +136,4 @@ module.exports = {
     development: browser,
     production: browser,
   },
-}
-
+};
