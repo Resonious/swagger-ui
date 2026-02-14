@@ -47,10 +47,12 @@
 
     code {
       display: inline-block;
+      max-width: 100%;
       padding: 4px;
       font-size: 16px;
       margin: 0 1em;
-      word-break: break-all;
+      overflow-x: auto;
+      white-space: nowrap;
     }
   }
 }

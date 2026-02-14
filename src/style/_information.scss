@@ -57,14 +57,17 @@
     font-weight: 300 !important;
 
     margin: 0;
-    word-break: break-all;
-    white-space: pre-wrap;
+    overflow-x: auto;
+    white-space: nowrap;
 
     @include type.text_code();
   }
 
   .url {
-    word-break: break-all;
+    display: inline-block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
   }
 
   .title {
